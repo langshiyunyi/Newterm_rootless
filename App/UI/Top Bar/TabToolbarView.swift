@@ -32,7 +32,7 @@ struct TabToolbarView: View {
 	private var horizontalSizeClass
 
 	var body: some View {
-		if horizontalSizeClass == .compact {
+		if UIDevice.current.userInterfaceIdiom == .pad {
 			VStack(spacing: 2) {
 				HStack(alignment: .center, spacing: 6) {
 					Color.clear
@@ -70,7 +70,7 @@ struct TabToolbarView: View {
 	private var titleLabel: some View {
 		HStack {
 			Spacer()
-			Text(state.terminals[state.selectedIndex].title)
+            Text(state.selectedIndex<state.terminals.count ? state.terminals[state.selectedIndex].title : "")
 				.font(.system(size: 17, weight: .semibold))
 			Spacer()
 		}

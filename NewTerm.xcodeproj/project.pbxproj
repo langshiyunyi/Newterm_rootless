@@ -29,7 +29,7 @@
 		4E460121261EC8C0004DBCC2 /* UpdateCheckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E460120261EC8C0004DBCC2 /* UpdateCheckManager.swift */; };
 		4E460129261FF23F004DBCC2 /* SettingsSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E460128261FF23F004DBCC2 /* SettingsSceneDelegate.swift */; };
 		4E479710262D44D8003CF48C /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 4E479713262D44D8003CF48C /* Localizable.stringsdict */; };
-		4E4CB12027E9B33C001F07B6 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 4E4CB11F27E9B33C001F07B6 /* SwiftUIX */; };
+		A20000032E00000100000003 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = A40000022E00000100000002 /* SwiftUIX */; };
 		4E57499826FEE90700D94DF5 /* PreferencesGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E57499726FEE90700D94DF5 /* PreferencesGroup.swift */; };
 		4E57499A26FEED9800D94DF5 /* PreferencesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E57499926FEED9800D94DF5 /* PreferencesList.swift */; };
 		4E5E817526F2EBE000C4DB6D /* SettingsPerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5E817426F2EBE000C4DB6D /* SettingsPerformanceView.swift */; };
@@ -44,7 +44,8 @@
 		4E980833261ACA0400E41883 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E980831261AC9FA00E41883 /* AppTheme.swift */; };
 		4E9B32E0260C66B5006A1FBC /* Bundle+NewTermAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9B32DF260C66B5006A1FBC /* Bundle+NewTermAdditions.swift */; };
 		4E9B32EB261DCFC4006A1FBC /* TextInputBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9B32EA261DCFC4006A1FBC /* TextInputBase.swift */; };
-		4E9FB96C26171A01005AFCC8 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9FB96B26171A01005AFCC8 /* SwiftTerm */; };
+		A20000012E00000100000001 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = A40000012E00000100000001 /* SwiftTerm */; };
+		A20000022E00000100000002 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = A40000032E00000100000003 /* SwiftTerm */; };
 		4E9FB97226172079005AFCC8 /* Color+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9FB97126172079005AFCC8 /* Color+Additions.swift */; };
 		4E9FB97526172293005AFCC8 /* StringSupplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9FB97426172293005AFCC8 /* StringSupplier.swift */; };
 		4E9FB978261724FA005AFCC8 /* ColorMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9FB977261724FA005AFCC8 /* ColorMap.swift */; };
@@ -166,6 +167,7 @@
 		4E460120261EC8C0004DBCC2 /* UpdateCheckManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCheckManager.swift; sourceTree = "<group>"; };
 		4E460128261FF23F004DBCC2 /* SettingsSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneDelegate.swift; sourceTree = "<group>"; };
 		4E479712262D44D8003CF48C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		A10000012E00000100000001 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4E57499726FEE90700D94DF5 /* PreferencesGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesGroup.swift; sourceTree = "<group>"; };
 		4E57499926FEED9800D94DF5 /* PreferencesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesList.swift; sourceTree = "<group>"; };
 		4E5E817426F2EBE000C4DB6D /* SettingsPerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPerformanceView.swift; sourceTree = "<group>"; };
@@ -254,7 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E69E3932951E39A00B5BD25 /* libiosexec.xcframework in Frameworks */,
-				4E9FB96C26171A01005AFCC8 /* SwiftTerm in Frameworks */,
+				A20000012E00000100000001 /* SwiftTerm in Frameworks */,
 				CF71BCC322BB727B00AFB1E1 /* libcurses.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,7 +266,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF71BC9322BB6DEA00AFB1E1 /* NewTermCommon.framework in Frameworks */,
-				4E4CB12027E9B33C001F07B6 /* SwiftUIX in Frameworks */,
+				A20000022E00000100000002 /* SwiftTerm in Frameworks */,
+				A20000032E00000100000003 /* SwiftUIX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,7 +596,7 @@
 			);
 			name = "NewTerm Common";
 			packageProductDependencies = (
-				4E9FB96B26171A01005AFCC8 /* SwiftTerm */,
+				A40000012E00000100000001 /* SwiftTerm */,
 			);
 			productName = "NewTerm Common";
 			productReference = CF71BC8422BB6DBA00AFB1E1 /* NewTermCommon.framework */;
@@ -618,7 +621,8 @@
 			);
 			name = "NewTerm (iOS)";
 			packageProductDependencies = (
-				4E4CB11F27E9B33C001F07B6 /* SwiftUIX */,
+				A40000032E00000100000003 /* SwiftTerm */,
+				A40000022E00000100000002 /* SwiftUIX */,
 			);
 			productName = "NewTerm (macOS)";
 			productReference = CFBB966122B546DA00585BE6 /* NewTerm.app */;
@@ -653,12 +657,13 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = CF22F9A81FFB97F7003175DE;
 			packageReferences = (
-				4E9FB96A26171A01005AFCC8 /* XCRemoteSwiftPackageReference "SwiftTerm" */,
-				4E4CB11D27E9B2DB001F07B6 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
+				4E9FB96A26171A01005AFCC8 /* XCLocalSwiftPackageReference "SwiftTerm" */,
+				4E4CB11D27E9B2DB001F07B6 /* XCLocalSwiftPackageReference "SwiftUIX" */,
 			);
 			productRefGroup = CF22F9A81FFB97F7003175DE;
 			projectDirPath = "";
@@ -842,6 +847,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				CFBB96F122B548D700585BE6 /* en */,
+				A10000012E00000100000001 /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1368,34 +1374,31 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		4E4CB11D27E9B2DB001F07B6 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.2;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		4E4CB11D27E9B2DB001F07B6 /* XCLocalSwiftPackageReference "SwiftUIX" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Deps/SwiftUIX;
 		};
-		4E9FB96A26171A01005AFCC8 /* XCRemoteSwiftPackageReference "SwiftTerm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
+		4E9FB96A26171A01005AFCC8 /* XCLocalSwiftPackageReference "SwiftTerm" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Deps/SwiftTerm;
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4E4CB11F27E9B33C001F07B6 /* SwiftUIX */ = {
+		A40000022E00000100000002 /* SwiftUIX */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4E4CB11D27E9B2DB001F07B6 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
+			package = 4E4CB11D27E9B2DB001F07B6 /* XCLocalSwiftPackageReference "SwiftUIX" */;
 			productName = SwiftUIX;
 		};
-		4E9FB96B26171A01005AFCC8 /* SwiftTerm */ = {
+		A40000012E00000100000001 /* SwiftTerm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4E9FB96A26171A01005AFCC8 /* XCRemoteSwiftPackageReference "SwiftTerm" */;
+			package = 4E9FB96A26171A01005AFCC8 /* XCLocalSwiftPackageReference "SwiftTerm" */;
+			productName = SwiftTerm;
+		};
+		A40000032E00000100000003 /* SwiftTerm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9FB96A26171A01005AFCC8 /* XCLocalSwiftPackageReference "SwiftTerm" */;
 			productName = SwiftTerm;
 		};
 /* End XCSwiftPackageProductDependency section */

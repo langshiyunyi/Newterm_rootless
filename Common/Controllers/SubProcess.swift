@@ -146,6 +146,15 @@ class SubProcess {
 		didSet { updateWindowSize() }
 	}
 
+	private var isActivated = false
+
+	func activeProcess() {
+		if !isActivated, let childPID = childPID {
+			isActivated = true
+			kill(childPID, SIGCONT)
+		}
+	}
+
 	func start(initialDirectory: String? = nil) throws {
 		if childPID != nil {
 			throw SubProcessIllegalStateError.alreadyStarted
@@ -180,7 +189,8 @@ class SubProcess {
 			argv = (Self.loginArgv + [initialDirectory ?? Self.homeDirectory, Self.shell]).cStringArray
 		}
 		let envp = (ProcessInfo.processInfo.environment.map { "\($0)=\($1)" } + Self.baseEnvp + [
-			"LANG=\(localeCode)"
+			"LANG=\(localeCode)",
+			"PATH_LOCALE=/var/jb/usr/share/locale"
 		]).cStringArray
 
 		defer {
@@ -188,8 +198,14 @@ class SubProcess {
 			envp.deallocate()
 		}
 
+		var attributes: posix_spawnattr_t?
+		posix_spawnattr_init(&attributes)
+		defer { posix_spawnattr_destroy(&attributes) }
+
+		posix_spawnattr_setflags(&attributes, Int16(POSIX_SPAWN_START_SUSPENDED))
+
 		var pid = pid_t()
-		let result = ie_posix_spawn(&pid, Self.login, &actions, nil, argv, envp)
+		let result = ie_posix_spawn(&pid, Self.login, &actions, &attributes, argv, envp)
 		close(fds.replica)
 		if result != 0 {
 			// Fork failed.
@@ -315,7 +331,7 @@ class SubProcess {
 			if let languageCode = locale.languageCode,
 				 let regionCode = locale.regionCode {
 				let identifier = "\(languageCode)_\(regionCode).UTF-8"
-				let url = URL(fileURLWithPath: "/usr/share/locale")/identifier
+				let url = URL(fileURLWithPath: "/var/jb/usr/share/locale")/identifier
 				if (try? url.checkResourceIsReachable()) == true {
 					return identifier
 				}

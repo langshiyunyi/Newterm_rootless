@@ -81,14 +81,14 @@ class RootViewController: UIViewController {
 																 modifierFlags: [.command, .shift]))
 		}
 
-		addKeyCommand(UIKeyCommand(title: .localize("SPLIT_HORIZONTALLY"),
-															 action: #selector(self.splitHorizontally),
-															 input: "d",
-															 modifierFlags: [.command, .shift]))
-		addKeyCommand(UIKeyCommand(title: .localize("SPLIT_VERTICALLY"),
-															 action: #selector(self.splitVertically),
-															 input: "d",
-															 modifierFlags: .command))
+//		addKeyCommand(UIKeyCommand(title: .localize("SPLIT_HORIZONTALLY"),
+//															 action: #selector(self.splitHorizontally),
+//															 input: "d",
+//															 modifierFlags: [.command, .shift]))
+//		addKeyCommand(UIKeyCommand(title: .localize("SPLIT_VERTICALLY"),
+//															 action: #selector(self.splitVertically),
+//															 input: "d",
+//															 modifierFlags: .command))
 
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.preferencesUpdated), name: Preferences.didChangeNotification, object: nil)
@@ -102,8 +102,8 @@ class RootViewController: UIViewController {
 
 		// TODO: Cleanup
 		#if !targetEnvironment(macCatalyst)
-		let isWide = isBigDevice || view.frame.size.width > 450
-		let topBarHeight: CGFloat = isWide ? 33 : 66
+//		let isWide = isBigDevice || view.frame.size.width > 450
+		let topBarHeight: CGFloat = UIDevice.current.userInterfaceIdiom != .pad ? 33 : 66
 		tabToolbar?.view.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.safeAreaInsets.top + topBarHeight)
 
 		for viewController in terminals {
@@ -111,6 +111,10 @@ class RootViewController: UIViewController {
 		}
 		#endif
 	}
+
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+    }
 
 	// MARK: - Preferences
 
@@ -143,9 +147,11 @@ class RootViewController: UIViewController {
 		splitViewController.view.autoresizingMask = [ .flexibleWidth, .flexibleHeight ]
 		splitViewController.view.frame = view.bounds
 		splitViewController.delegate = self
+        splitViewController.terminalIndex = index
 
 		let newTerminal = TerminalSessionViewController()
 		newTerminal.initialCommand = initialCommand
+        newTerminal.keyboardToolbarHeightChanged = splitViewController.keyboardToolbarHeightChanged(height:)
 
 		addChild(splitViewController)
 		splitViewController.willMove(toParent: self)

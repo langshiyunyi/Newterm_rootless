@@ -32,7 +32,7 @@ struct SettingsAboutView: View {
 					.frame(height: 200)
 					.ignoresSafeArea()
 
-				Text("NewTerm \(version)")
+				Text(String(format: .localize("VERSION_FORMAT"), version))
 					.padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
 					.font(.system(size: 16, weight: .semibold))
 
@@ -77,7 +77,7 @@ struct SettingsAboutView: View {
 											 label: {
 					HStack {
 						Spacer()
-						Text("License & Acknowlegements")
+						Text("License & Acknowledgements")
 							.font(.system(size: 12))
 							.buttonStyle(PlainButtonStyle())
 						Spacer()

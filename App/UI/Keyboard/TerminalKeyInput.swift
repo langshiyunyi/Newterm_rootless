@@ -23,10 +23,11 @@ extension ToolbarKey {
 		case .end:      return EscapeSequences.end
 		case .pageUp:   return EscapeSequences.pageUp
 		case .pageDown: return EscapeSequences.pageDown
-		case .delete:   return EscapeSequences.delete
+        case .delete:   return EscapeSequences.delete
+        case .Delete:   return EscapeSequences.Delete
 		case .fnKey(let index): return EscapeSequences.fn[index - 1]
 		case .fixedSpace, .variableSpace, .arrows,
-				 .control, .more, .fnKeys:
+				 .control, .shift, .more, .fnKeys:
 			return []
 		}
 	}
@@ -41,13 +42,81 @@ extension ToolbarKey {
 		}
 	}
 
-	func keySequence(applicationCursor: Bool = false) -> [UTF8Char] {
-		(applicationCursor ? appKeySequence : nil) ?? keySequence
+	func keySequence(applicationCursor: Bool = false, shift: Bool = false, control: Bool = false) -> [UTF8Char] {
+		if shift || control {
+			let modifier = 1 + (shift ? 1 : 0) + (control ? 4 : 0)
+			switch self {
+			case .tab where shift:
+				return "\u{1b}[Z".utf8Array
+			case .up:
+				return "\u{1b}[1;\(modifier)A".utf8Array
+			case .down:
+				return "\u{1b}[1;\(modifier)B".utf8Array
+			case .right:
+				return "\u{1b}[1;\(modifier)C".utf8Array
+			case .left:
+				return "\u{1b}[1;\(modifier)D".utf8Array
+			case .home:
+				return "\u{1b}[1;\(modifier)H".utf8Array
+			case .end:
+				return "\u{1b}[1;\(modifier)F".utf8Array
+			case .pageUp:
+				return "\u{1b}[5;\(modifier)~".utf8Array
+			case .pageDown:
+				return "\u{1b}[6;\(modifier)~".utf8Array
+			case .delete, .Delete:
+				return "\u{1b}[3;\(modifier)~".utf8Array
+			case .fnKey(let index) where index >= 1 && index <= 4:
+				let final = ["P", "Q", "R", "S"][index - 1]
+				return "\u{1b}[1;\(modifier)\(final)".utf8Array
+			case .fnKey(let index) where index >= 5 && index <= 12:
+				let code = [15, 17, 18, 19, 20, 21, 23, 24][index - 5]
+				return "\u{1b}[\(code);\(modifier)~".utf8Array
+			default:
+				break
+			}
+		}
+
+		return (applicationCursor ? appKeySequence : nil) ?? keySequence
+	}
+}
+
+private extension UTF8Char {
+	var shiftedCharacter: UTF8Char {
+		if self >= 0x61 && self <= 0x7A {
+			return self - 0x20
+		}
+
+		switch self {
+		case 0x31: return 0x21
+		case 0x32: return 0x40
+		case 0x33: return 0x23
+		case 0x34: return 0x24
+		case 0x35: return 0x25
+		case 0x36: return 0x5E
+		case 0x37: return 0x26
+		case 0x38: return 0x2A
+		case 0x39: return 0x28
+		case 0x30: return 0x29
+		case 0x60: return 0x7E
+		case 0x2D: return 0x5F
+		case 0x3D: return 0x2B
+		case 0x5B: return 0x7B
+		case 0x5D: return 0x7D
+		case 0x5C: return 0x7C
+		case 0x3B: return 0x3A
+		case 0x27: return 0x22
+		case 0x2C: return 0x3C
+		case 0x2E: return 0x3E
+		case 0x2F: return 0x3F
+		default:   return self
+		}
 	}
 }
 
 class TerminalKeyInput: TextInputBase {
 
+    var keyboardToolbarHeightChanged: ((Double) -> Void)?
 	weak var terminalInputDelegate: TerminalInputProtocol?
 	weak var textView: UIView! {
 		didSet {
@@ -78,34 +147,34 @@ class TerminalKeyInput: TextInputBase {
 		smartInsertDeleteType = .no
 
 		var toolbars: [Toolbar] = [.fnKeys, .secondary]
-		if UIDevice.current.userInterfaceIdiom == .pad {
-			let leadingView = KeyboardToolbarPadItemView(delegate: self,
-																									 toolbar: .padPrimaryLeading,
-																									 state: state)
-			let trailingView = KeyboardToolbarPadItemView(delegate: self,
-																										toolbar: .padPrimaryTrailing,
-																										state: state)
-
-			inputAssistantItem.allowsHidingShortcuts = false
-
-			if #available(iOS 16, *) {
-				inputAssistantItem.leadingBarButtonGroups += [
-					.fixedGroup(items: [UIBarButtonItem(customView: leadingView)])
-				]
-				inputAssistantItem.trailingBarButtonGroups += [
-					.fixedGroup(items: [UIBarButtonItem(customView: trailingView)])
-				]
-			} else {
-				inputAssistantItem.leadingBarButtonGroups += [
-					UIBarButtonItemGroup(barButtonItems: [UIBarButtonItem(customView: leadingView)], representativeItem: nil)
-				]
-				inputAssistantItem.trailingBarButtonGroups += [
-					UIBarButtonItemGroup(barButtonItems: [UIBarButtonItem(customView: trailingView)], representativeItem: nil)
-				]
-			}
-		} else {
+//		if UIDevice.current.userInterfaceIdiom == .pad {
+//			let leadingView = KeyboardToolbarPadItemView(delegate: self,
+//																									 toolbar: .padPrimaryLeading,
+//																									 state: state)
+//			let trailingView = KeyboardToolbarPadItemView(delegate: self,
+//																										toolbar: .padPrimaryTrailing,
+//																										state: state)
+//
+//			inputAssistantItem.allowsHidingShortcuts = false
+//
+//			if #available(iOS 16, *) {
+//				inputAssistantItem.leadingBarButtonGroups += [
+//					.fixedGroup(items: [UIBarButtonItem(customView: leadingView)])
+//				]
+//				inputAssistantItem.trailingBarButtonGroups += [
+//					.fixedGroup(items: [UIBarButtonItem(customView: trailingView)])
+//				]
+//			} else {
+//				inputAssistantItem.leadingBarButtonGroups += [
+//					UIBarButtonItemGroup(barButtonItems: [UIBarButtonItem(customView: leadingView)], representativeItem: nil)
+//				]
+//				inputAssistantItem.trailingBarButtonGroups += [
+//					UIBarButtonItemGroup(barButtonItems: [UIBarButtonItem(customView: trailingView)], representativeItem: nil)
+//				]
+//			}
+//		} else {
 			toolbars += [.primary]
-		}
+//		}
 
 		toolbar = KeyboardToolbarInputView(delegate: self,
 																			 toolbars: toolbars,
@@ -125,6 +194,8 @@ class TerminalKeyInput: TextInputBase {
 		if let passwordInputView = passwordInputView {
 			// We’ll become first responder automatically after removing the view.
 			passwordInputView.removeFromSuperview()
+            self.passwordInputView = nil
+            self.becomeFirstResponder()
 		} else {
 			passwordInputView = TerminalPasswordInputView()
 			passwordInputView!.passwordDelegate = self
@@ -140,7 +211,9 @@ class TerminalKeyInput: TextInputBase {
 	override func insertText(_ text: String) {
 		// Used by the software keyboard only. See pressesBegan(_:with:) below for hardware keyboard.
 		let isCtrlDown = state.toggledKeys.contains(.control)
+		let isShiftDown = state.toggledKeys.contains(.shift)
 		let data = text.utf8.map { character -> UTF8Char in
+			let character = isShiftDown ? character.shiftedCharacter : character
 			// Convert newline to carriage return
 			if character == 0x0A {
 				return EscapeSequences.return.first!
@@ -153,9 +226,8 @@ class TerminalKeyInput: TextInputBase {
 
 		terminalInputDelegate!.receiveKeyboardInput(data: data)
 
-		if isCtrlDown {
-			state.toggledKeys.remove(.control)
-		}
+		state.toggledKeys.remove(.control)
+		state.toggledKeys.remove(.shift)
 
 //		if !moreToolbar.isHidden {
 //			setMoreRowVisible(false, animated: true)
@@ -220,6 +292,9 @@ class TerminalKeyInput: TextInputBase {
 			// Only paste if the pasteboard contains a plaintext type
 			return UIPasteboard.general.hasStrings || UIPasteboard.general.hasURLs
 
+        case #selector(self.copy(_:)):
+            return true
+
 		case #selector(self.cut(_:)):
 			// Ensure cut is never allowed
 			return false
@@ -230,7 +305,9 @@ class TerminalKeyInput: TextInputBase {
 	}
 
 	override func copy(_ sender: Any?) {
-//		textView?.copy(sender)
+        if let text = terminalInputDelegate!.getAllText() {
+            UIPasteboard.general.string = text
+        }
 	}
 
 	override func paste(_ sender: Any?) {
@@ -305,10 +382,10 @@ class TerminalKeyInput: TextInputBase {
 			keyData = keyData.map(\.controlCharacter)
 		}
 
-		// Prepend esc before each byte if meta key is down.
-		if key.modifierFlags.contains(.alternate) {
-			keyData = keyData.reduce([], { result, character in result + EscapeSequences.meta + [character] })
-		}
+//		// Prepend esc before each byte if meta key is down.
+//		if key.modifierFlags.contains(.alternate) {
+//			keyData = keyData.reduce([], { result, character in result + EscapeSequences.meta + [character] })
+//		}
 
 		terminalInputDelegate?.receiveKeyboardInput(data: keyData)
 		return true
@@ -320,13 +397,15 @@ class TerminalKeyInput: TextInputBase {
 			if let key = press.key,
 				 handleKey(key) {
 				isHandled = true
-				pressedHardwareKeys.insert(key)
-			}
+				pressedHardwareKeys = [key] //only repeat the pressed key
+            }
 		}
-
+// sometimes ios dose not send the end key event, so we only allow it on simultor for testing
+#if targetEnvironment(simulator)
 		if !pressedHardwareKeys.isEmpty {
 			beginKeyRepeat()
 		}
+#endif
 
 		if !isHandled {
 			super.pressesBegan(presses, with: event)
@@ -334,6 +413,10 @@ class TerminalKeyInput: TextInputBase {
 	}
 
 	private func handlePressesEnded(_ presses: Set<UIPress>) {
+        if repeatTimer != nil {
+            repeatTimer?.invalidate()
+            repeatTimer = nil
+        }
 		for press in presses {
 			if let key = press.key {
 				pressedHardwareKeys.remove(key)
@@ -353,7 +436,8 @@ class TerminalKeyInput: TextInputBase {
 
 	private func beginKeyRepeat() {
 		if repeatTimer != nil {
-			return
+            repeatTimer?.invalidate()
+            repeatTimer = nil
 		}
 
 		if KeyboardPreferences.isKeyRepeatEnabled {
@@ -392,12 +476,28 @@ class TerminalKeyInput: TextInputBase {
 }
 
 extension TerminalKeyInput: KeyboardToolbarViewDelegate {
+    func keyboardToolbarDidChangeHeight(height: Double) {
+        self.keyboardToolbarHeightChanged?(height)
+    }
+
 	func keyboardToolbarDidPressKey(_ key: ToolbarKey) {
 		guard let terminalInputDelegate = terminalInputDelegate else {
 			return
 		}
 
-		terminalInputDelegate.receiveKeyboardInput(data: key.keySequence(applicationCursor: terminalInputDelegate.applicationCursor))
+		let isControlDown = state.toggledKeys.contains(.control)
+		let isShiftDown = state.toggledKeys.contains(.shift)
+		let data = key.keySequence(applicationCursor: terminalInputDelegate.applicationCursor,
+											 shift: isShiftDown,
+											 control: isControlDown)
+		if !data.isEmpty {
+			terminalInputDelegate.receiveKeyboardInput(data: data)
+		}
+
+		if key != .control && key != .shift && key != .more && key != .fnKeys {
+			state.toggledKeys.remove(.control)
+			state.toggledKeys.remove(.shift)
+		}
 
 		switch key {
 		case .more:
@@ -414,8 +514,8 @@ extension TerminalKeyInput: KeyboardToolbarViewDelegate {
 		switch key {
 		case .up, .down, .left, .right,
 				 .home, .end, .pageUp, .pageDown,
-				 .delete:
-			pressedToolbarKeys.insert(key)
+				 .delete, .Delete, .fnKey(_):
+			pressedToolbarKeys = [key] //only repeat the pressed key
 			beginKeyRepeat()
 
 		default: break

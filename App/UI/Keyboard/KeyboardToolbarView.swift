@@ -16,7 +16,9 @@ fileprivate struct Key {
 	var preferredStyle: KeyboardButtonStyle?
 	var isToggle = false
 	var halfHeight = false
-	var widthRatio: CGFloat?
+    var widthRatio: CGFloat?
+    var heightRatio: CGFloat?
+    var minWidth: CGFloat?
 	var keyRepeat: Bool?
 }
 
@@ -27,11 +29,7 @@ enum Toolbar: CaseIterable {
 	var keys: [ToolbarKey] {
 		switch self {
 		case .primary:
-			return [
-				.control, .escape, .tab, .more,
-				.variableSpace(id: 0),
-				.arrows
-			]
+			return []
 
 		case .padPrimaryLeading:
 			return [.control, .escape, .tab, .more]
@@ -62,7 +60,7 @@ enum ToolbarKey: Hashable {
 	case variableSpace(id: Int)
 	case arrows
 	// Primary - leading
-	case control, escape, tab, more
+	case control, shift, escape, tab, more, Delete
 	// Primary - trailing
 	case up, down, left, right
 	// Secondary - navigation
@@ -79,68 +77,72 @@ enum ToolbarKey: Hashable {
 			return Key(label: "")
 
 		// Primary - leading
-		case .control:  return Key(label: .localize("Control"),
-															 glyph: .localize("Ctrl"),
-															 imageName: .control,
-															 isToggle: true)
-		case .escape:   return Key(label: .localize("Escape"),
-															 glyph: .localize("Esc"),
-															 imageName: .escape)
-		case .tab:      return Key(label: .localize("Tab"),
-															 imageName: .arrowRightToLine)
-		case .more:     return Key(label: .localize("More"),
-															 imageName: .ellipsis,
+			case .control:  return Key(label: "Control",
+												 glyph: "Ctrl",
+												 imageName: .control,
+												 isToggle: true)
+				case .shift:    return Key(label: "Shift",
+												 imageName: .shift,
+												 isToggle: true)
+		case .escape:   return Key(label: "Escape",
+												 glyph: "Esc",
+												 imageName: .escape)
+		case .tab:      return Key(label: "Tab",
+												 imageName: .arrowRightToLine)
+		case .more:     return Key(label: "More",
+												 imageName: .ellipsis,
 															 preferredStyle: .icons,
 															 isToggle: true)
+
+        case .Delete:   return Key(label: "Delete Forward",
+                                                                 glyph: "Del",
+                                                                 imageName: .deleteRight,
+                                                                 preferredStyle: .icons)
 		// Primary - trailing
-		case .up:       return Key(label: .localize("Up"),
+		case .up:       return Key(label: "Up",
 															 imageName: .arrowUp,
 															 preferredStyle: .icons,
-															 halfHeight: true,
-															 widthRatio: 1)
-		case .down:     return Key(label: .localize("Down"),
+															 widthRatio: 1, minWidth: 25)
+		case .down:     return Key(label: "Down",
 															 imageName: .arrowDown,
 															 preferredStyle: .icons,
-															 halfHeight: true,
-															 widthRatio: 1)
-		case .left:     return Key(label: .localize("Left"),
+															 widthRatio: 1, minWidth: 25)
+		case .left:     return Key(label: "Left",
 															 imageName: .arrowLeft,
 															 preferredStyle: .icons,
-															 halfHeight: true,
-															 widthRatio: 1)
-		case .right:    return Key(label: .localize("Right"),
+															 widthRatio: 1, minWidth: 25)
+		case .right:    return Key(label: "Right",
 															 imageName: .arrowRight,
 															 preferredStyle: .icons,
-															 halfHeight: true,
-															 widthRatio: 1)
+															 widthRatio: 1, minWidth: 25)
 		// Secondary - navigation
-		case .home:     return Key(label: .localize("Home"),
-															 widthRatio: 1.25)
-		case .end:      return Key(label: .localize("End"),
-															 widthRatio: 1.25)
-		case .pageUp:   return Key(label: .localize("Page Up"),
-															 glyph: .localize("PgUp"),
-															 widthRatio: 1.25)
-		case .pageDown: return Key(label: .localize("Page Down"),
-															 glyph: .localize("PgDn"),
-															 widthRatio: 1.25)
+        case .home:     return Key(label: "Home",
+                                   widthRatio: 1.25, heightRatio: isSmallDevice ? 0.8 : 1)
+		case .end:      return Key(label: "End",
+                                   widthRatio: 1.25, heightRatio: isSmallDevice ? 0.8 : 1)
+		case .pageUp:   return Key(label: "Page Up",
+												 glyph: "PgUp",
+                                   widthRatio: 1.25, heightRatio: isSmallDevice ? 0.8 : 1)
+		case .pageDown: return Key(label: "Page Down",
+												 glyph: "PgDn",
+                                   widthRatio: 1.25, heightRatio: isSmallDevice ? 0.8 : 1)
 
 		// Secondary - extras
-		case .delete:   return Key(label: .localize("Delete Forward"),
-															 glyph: .localize("Del"),
-															 imageName: .deleteRight,
+		case .delete:   return Key(label: "Delete Forward",
+												 glyph: "Del",
+//															 imageName: .deleteRight,
 															 preferredStyle: .icons,
-															 widthRatio: 1)
-		case .fnKeys:   return Key(label: .localize("Function Keys"),
-															 glyph: .localize("Fn"),
+                                    widthRatio: 1, heightRatio: isSmallDevice ? 0.8 : 1)
+		case .fnKeys:   return Key(label: "Function Keys",
+												 glyph: "Fn",
 															 isToggle: true,
-															 widthRatio: 1)
+                                   widthRatio: 1, heightRatio: isSmallDevice ? 0.8 : 1)
 
 		// Fn keys
 		case .fnKey(let index):
 			return Key(label: "F\(index)",
 								 preferredStyle: .text,
-								 widthRatio: 1)
+                       widthRatio: 1, heightRatio: isSmallDevice ? 0.7 : 1, minWidth: 35)
 		}
 	}
 }
@@ -149,6 +151,7 @@ protocol KeyboardToolbarViewDelegate: AnyObject {
 	func keyboardToolbarDidPressKey(_ key: ToolbarKey)
 	func keyboardToolbarDidBeginPressingKey(_ key: ToolbarKey)
 	func keyboardToolbarDidEndPressingKey(_ key: ToolbarKey)
+    func keyboardToolbarDidChangeHeight(height: Double)
 }
 
 class KeyboardToolbarViewState: ObservableObject {
@@ -164,22 +167,41 @@ struct KeyboardToolbarKeyStack: View {
 	@EnvironmentObject var state: KeyboardToolbarViewState
 
 	@ObservedObject private var preferences = Preferences.shared
+	@ObservedObject private var shortcutPreferences = KeyboardShortcutPreferences.shared
 
+	@ViewBuilder
 	var body: some View {
+		if toolbar == .primary {
+			HStack(alignment: .center, spacing: 5) {
+				ScrollView(.horizontal, showsIndicators: false) {
+					keyRow(shortcutPreferences.keys.map(\.toolbarKey))
+				}
+				arrowsView
+					.fixedSize(horizontal: true, vertical: false)
+			}
+		} else {
+			keyRow(toolbar.keys)
+		}
+	}
+
+	private func keyRow(_ keys: [ToolbarKey]) -> some View {
 		HStack(alignment: .center, spacing: 5) {
-			ForEach(toolbar.keys, id: \.self) { key in
+			ForEach(keys, id: \.self) { key in
 				switch key {
 				case .fixedSpace:    EmptyView()
 				case .variableSpace: Spacer(minLength: 0)
 				case .arrows:        arrowsView
 				default:             button(for: key)
 				}
+                if toolbar == .fnKeys && key != keys.last {
+                    Spacer(minLength: 0)
+                }
 			}
 		}
 	}
 
 	@ViewBuilder
-	func button(for key: ToolbarKey, halfHeight: Bool = false) -> some View {
+	func button(for key: ToolbarKey, halfHeight: Bool? = nil) -> some View {
 		let button = Button {
 			UIDevice.current.playInputClick()
 
@@ -201,18 +223,18 @@ struct KeyboardToolbarKeyStack: View {
 
 			default:
 				VStack(alignment: .trailing, spacing: 2) {
+                    if let imageName = key.key.imageName,
+                         key.key.preferredStyle != .text {
 					HStack(spacing: 0) {
-						if let imageName = key.key.imageName,
-							 key.key.preferredStyle != .text {
 							Image(systemName: imageName)
 								.imageScale(.small)
 								.opacity(0.5)
 								.frame(width: 14, height: 14, alignment: .center)
 								.padding(.trailing, 1)
 								.accessibilityLabel(key.key.label)
-						}
 					}
 					.frame(height: 14)
+                    }
 
 					Text((key.key.glyph ?? key.key.label).localizedLowercase)
 				}
@@ -220,8 +242,8 @@ struct KeyboardToolbarKeyStack: View {
 		}
 			.buttonStyle(.keyboardKey(selected: state.toggledKeys.contains(key),
 																hasShadow: true,
-																halfHeight: halfHeight,
-																widthRatio: key.key.widthRatio))
+                                      halfHeight: halfHeight ?? key.key.halfHeight,
+                                      widthRatio: key.key.widthRatio, minWidth: key.key.minWidth, heightRatio: key.key.heightRatio))
 
 		if KeyboardPreferences.isKeyRepeatEnabled {
 			button
@@ -239,6 +261,14 @@ struct KeyboardToolbarKeyStack: View {
 		}
 	}
 
+    struct ButtonHeightPreferenceKey: PreferenceKey {
+        static var defaultValue: CGFloat = 0
+        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+            value = nextValue()
+        }
+    }
+    @State private var halfButtonsHeight: CGFloat = 0
+
 	@ViewBuilder
 	var arrowsView: some View {
 		switch arrowsStyle ?? preferences.keyboardArrowsStyle {
@@ -255,7 +285,7 @@ struct KeyboardToolbarKeyStack: View {
 		case .scissor:
 			HStack(spacing: isBigDevice ? 5 : 2) {
 				VStack(alignment: .trailing, spacing: 2) {
-					Spacer()
+                    Spacer(minLength: 45/2-1)
 					button(for: .left, halfHeight: true)
 				}
 				VStack(alignment: .trailing, spacing: 2) {
@@ -263,7 +293,7 @@ struct KeyboardToolbarKeyStack: View {
 					button(for: .down, halfHeight: true)
 				}
 				VStack(alignment: .trailing, spacing: 2) {
-					Spacer()
+                    Spacer(minLength: 45/2-1)
 					button(for: .right, halfHeight: true)
 				}
 			}
@@ -294,7 +324,15 @@ struct KeyboardToolbarKeyStack: View {
 		}
 	}
 }
-
+struct KeyboardToolbarViewTest: View {
+    var body: some View {
+        Rectangle()
+            .fill(Color.red)
+            .frame(height: 50)
+            .opacity(0.5)
+            .padding(5)
+    }
+}
 struct KeyboardToolbarView: View {
 	weak var delegate: KeyboardToolbarViewDelegate?
 
@@ -319,34 +357,58 @@ struct KeyboardToolbarView: View {
 
 	@ViewBuilder
 	var body: some View {
-		ZStack(alignment: .bottom) {
-			Color.black
-				.frame(height: 0)
-				.captureSize(in: $outerSize)
+//		ZStack(alignment: .bottom) {
+//			Color.black
+//				.frame(height: 0)
+//				.captureSize(in: $outerSize)
+//                .background(GeometryReader { geometry in
+//                 Color.blue.opacity(0.5)
+//                     .onAppear {
+//                         NSLog("NewTermLog: ZStack onAppear \(geometry.size)")
+//                     }
+//                     .onChange(of: geometry.size) { newSize in
+//                         NSLog("NewTermLog: ZStack onChange \(newSize)")
+//                     }
+//                })
 
 			VStack(spacing: 0) {
 				ForEach(toolbars, id: \.self) { toolbar in
 					if isToolbarVisible(toolbar) {
 						let view = KeyboardToolbarKeyStack(delegate: delegate,
 																							 toolbar: toolbar)
-							.padding(.horizontal, 4)
+                            .padding(.horizontal, UIDevice.current.userInterfaceIdiom == .pad ? 4  : 1)
 							.padding(.top, 5)
 
 						switch toolbar {
 						case .primary, .padPrimaryLeading, .padPrimaryTrailing, .secondary:
 							view
-								.frame(width: outerSize.width)
+//								.frame(width: outerSize.width)
 
 						case .fnKeys:
 							CocoaScrollView(.horizontal, showsIndicators: false) {
 								view
-							}
-								.frame(width: outerSize.width)
+                            }
+//								.frame(width: outerSize.width)
 						}
 					}
 				}
+                .padding(.bottom, UIDevice.current.userInterfaceIdiom == .pad ? 5 : 2)
+//                .background(GeometryReader { geometry in
+//                    Color.green.opacity(0.5)
+//                         .onAppear {
+//                             NSLog("NewTermLog: VStack onAppear \(geometry.size)")
+//                         }
+//                         .onChange(of: geometry.size) { newSize in
+//                             NSLog("NewTermLog: VStack onChange \(newSize)")
+//                         }
+//                 })
 			}
-		}
+            .onChangeOfFrame(perform: { size in
+            })
+//		}
+//        .onChangeOfFrame(perform: { size in
+//            NSLog("NewTermLog: ZStack onChangeOfFrame \(size)")
+//        })
 	}
 }
 

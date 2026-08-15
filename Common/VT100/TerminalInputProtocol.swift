@@ -13,4 +13,6 @@ public protocol TerminalInputProtocol: AnyObject {
 
 	var applicationCursor: Bool { get }
 
+    func getAllText() -> String?
+
 }

@@ -27,11 +27,11 @@ NewTerm 3 is a work in progress, and is not yet considered stable. While we’ve
 This is only an early preview of what we’ve got planned for NewTerm. Stay tuned for further updates!
 
 ## Building
-The Xcode project builds with the latest release of Xcode, once Swift Package Manager dependencies have been downloaded.
+The Xcode project uses the vendored SwiftTerm and SwiftUIX packages under `Deps/`, so no remote Swift Package Manager checkout is required.
 
 The most convenient way to test the app is by building for the “My Mac” target. For debugging iOS-specific functionality, a mostly-functional terminal does work in the Simulator. It will spawn with a weird prompt that says “I have no name!”, as Simulator seems to block access to macOS’s Open Directory user database. However, you should still be able to do everything your logged-in macOS user can do.
 
-To install on a jailbroken device, first [set up Theos](https://git.io/theosinstall). Then, you can run `make do` in the root of the repo.
+To install on a jailbroken device, first [set up Theos](https://git.io/theosinstall). Then, run `gmake package THEOS=~/theos` to create a rootless package, or `make do` to build and install it on a configured device.
 
 ## License
 Licensed under the Apache License, version 2.0. Refer to [LICENSE.md](LICENSE.md).

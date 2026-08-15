@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TERMINAL</key>
+	<string>终端</string>
+	<key>SETTINGS</key>
+	<string>设置</string>
+	<key>ABOUT</key>
+	<string>关于 NewTerm</string>
+	<key>PASSWORD_MANAGER</key>
+	<string>密码管理器</string>
+	<key>TERMINAL_LAUNCH_FAILED</key>
+	<string>Shell 进程意外退出。</string>
+	<key>TERMINAL_LAUNCH_FAILED_TITLE</key>
+	<string>无法启动终端，因为 Shell 进程意外退出。</string>
+	<key>TERMINAL_LAUNCH_FAILED_BODY</key>
+	<string>请查看终端窗口中的错误消息以了解更多详情。
+你可能需要检查启动脚本或重新安装核心软件包来解决此问题。</string>
+	<key>PROCESS_COMPLETED_TITLE</key>
+	<string>会话已结束</string>
+	<key>NEW_TAB</key>
+	<string>新建标签页</string>
+	<key>CLOSE_TAB</key>
+	<string>关闭标签页</string>
+	<key>NEW_WINDOW</key>
+	<string>新建窗口</string>
+	<key>CLOSE_WINDOW</key>
+	<string>关闭窗口</string>
+	<key>CLEAR_TERMINAL</key>
+	<string>清空终端</string>
+	<key>SHOW_PREVIOUS_TAB</key>
+	<string>显示上一个标签页</string>
+	<key>SHOW_NEXT_TAB</key>
+	<string>显示下一个标签页</string>
+	<key>SPLIT_HORIZONTALLY</key>
+	<string>水平分屏</string>
+	<key>SPLIT_VERTICALLY</key>
+	<string>垂直分屏</string>
+	<key>LOCALE_SYSTEM</key>
+	<string>系统语言：%@</string>
+
+	<key>Terminal</key>
+	<string>终端</string>
+	<key>Font</key>
+	<string>字体</string>
+	<key>Theme</key>
+	<string>主题</string>
+	<key>Keyboard</key>
+	<string>键盘</string>
+	<key>Touch and hold the Space bar, then drag around the keyboard to move the cursor.</key>
+	<string>长按空格键，然后在键盘上拖动以移动光标。</string>
+	<key>Shortcut Keys</key>
+	<string>快捷键</string>
+	<key>Arrow Keys</key>
+	<string>方向键</string>
+	<key>Trackpad Sensitivity</key>
+	<string>触控板灵敏度</string>
+	<key>Bell</key>
+	<string>提示</string>
+	<key>Make beep sound</key>
+	<string>播放提示音</string>
+	<key>Make haptic vibration</key>
+	<string>触觉反馈</string>
+	<key>Show heads-up display</key>
+	<string>显示提示浮窗</string>
+	<key>Advanced</key>
+	<string>高级</string>
+	<key>About</key>
+	<string>关于</string>
+	<key>Toolbar Keys</key>
+	<string>工具栏按键</string>
+	<key>Drag to reorder. Swipe left to remove. Arrow keys remain fixed on the right side of the toolbar.</key>
+	<string>拖动以重新排序，向左滑动以移除。方向键固定在工具栏右侧。</string>
+	<key>Available Keys</key>
+	<string>可用按键</string>
+	<key>Fn opens the F1–F12 row. Shift and Control stay active for the next key press.</key>
+	<string>Fn 可展开 F1–F12 按键行。Shift 和 Control 会保持激活状态，直到下一次按键。</string>
+	<key>Reset to Defaults</key>
+	<string>恢复默认设置</string>
+	<key>Font Size</key>
+	<string>字体大小</string>
+	<key>FONT_SIZE</key>
+	<string>字体大小：%ld</string>
+	<key>Built in Themes</key>
+	<string>内置主题</string>
+	<key>System Language</key>
+	<string>系统语言</string>
+	<key>Performance</key>
+	<string>性能</string>
+	<key>Locale</key>
+	<string>区域设置</string>
+	<key>Language</key>
+	<string>语言</string>
+	<key>NewTerm will ask terminal programs to use this locale. Not all programs support this. This will not apply to currently open tabs, and may be overridden by shell startup scripts.</key>
+	<string>NewTerm 会请求终端程序使用此区域设置。并非所有程序都支持此设置。此设置不会应用于当前打开的标签页，并且可能会被 Shell 启动脚本覆盖。</string>
+	<key>On AC Power</key>
+	<string>接通电源</string>
+	<key>Refresh Rate</key>
+	<string>刷新率</string>
+	<key>The Performance setting is recommended.</key>
+	<string>建议使用“性能”设置。</string>
+	<key>On Battery</key>
+	<string>使用电池</string>
+	<key>BATTERY_REFRESH_RATE_FOOTER</key>
+	<string>较低的刷新率可以延长 %@ 的电池续航，但可能会使终端显示感觉迟缓。
+建议使用“性能”设置。</string>
+	<key>Preserve battery life by switching to Power Saver when Low Power Mode is enabled.</key>
+	<string>启用低电量模式后切换到“省电”以延长电池续航。</string>
+	<key>Reduce Performance in Low Power Mode</key>
+	<string>低电量模式下降低性能</string>
+	<key>Power Saver</key>
+	<string>省电</string>
+	<key>Balanced</key>
+	<string>均衡</string>
+	<key>Speed Demon</key>
+	<string>极速</string>
+	<key>Not installed. Tap to download.</key>
+	<string>未安装，点击下载。</string>
+	<key>License &amp; Acknowledgements</key>
+	<string>许可与致谢</string>
+	<key>VERSION_FORMAT</key>
+	<string>NewTerm %@</string>
+	<key>This is a beta — thanks for trying it out! If you find any issues, please let us know.</key>
+	<string>这是测试版，感谢你的试用！如果发现任何问题，请告诉我们。</string>
+	<key>Email Support</key>
+	<string>邮件支持</string>
+	<key>Support NewTerm Development</key>
+	<string>支持 NewTerm 开发</string>
+	<key>Share NewTerm</key>
+	<string>分享 NewTerm</string>
+	<key>© HASHBANG Productions</key>
+	<string>© HASHBANG Productions</string>
+	<key>Dedicated to Dennis Bednarz (2000 – 2019), a friend and visionary of the iOS community taken from us too soon.</key>
+	<string>谨以此纪念 Dennis Bednarz（2000 – 2019），一位过早离开我们的朋友和 iOS 社区先驱。</string>
+	<key>NewTerm is made available for free thanks to generous support from these fans:</key>
+	<string>感谢这些用户的慷慨支持，NewTerm 才能免费提供：</string>
+	<key>Check out NewTerm, a modern, super fast terminal app for iOS and macOS! 🧑‍💻</key>
+	<string>试试 NewTerm，这是一款现代、极速的 iOS 和 macOS 终端应用！🧑‍💻</string>
+
+	<key>ARROW_STYLE_BUTTERFLY</key>
+	<string>蝴蝶式</string>
+	<key>ARROW_STYLE_SCISSOR</key>
+	<string>剪刀式</string>
+	<key>ARROW_STYLE_CLASSIC</key>
+	<string>经典</string>
+	<key>ARROW_STYLE_VIM</key>
+	<string>Vim</string>
+	<key>ARROW_STYLE_VIM_INVERTED</key>
+	<string>Vim 反向</string>
+	<key>SENSITIVITY_OFF</key>
+	<string>关闭</string>
+	<key>SENSITIVITY_LOW</key>
+	<string>低</string>
+	<key>SENSITIVITY_MEDIUM</key>
+	<string>中</string>
+	<key>SENSITIVITY_HIGH</key>
+	<string>高</string>
+</dict>
+</plist>

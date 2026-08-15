@@ -58,6 +58,7 @@ public struct EscapeSequences {
 	public static let pageUp    = "\u{1b}[5~".utf8Array
 	public static let pageDown  = "\u{1b}[6~".utf8Array
 	public static let delete    = "\u{1b}[3~".utf8Array
+    public static let Delete    = "\u{1b}[3~".utf8Array
 
 	public static let fn        = [
 		"OP", "OQ", "OR", "OS", "[15~", "[17~", "[18~", "[19~", "[20~", "[21~", "[23~", "[24~"
@@ -66,15 +67,15 @@ public struct EscapeSequences {
 
 public extension UTF8Char {
 	var controlCharacter: UTF8Char {
-		var newCharacter = self
-		// Translate capital to lowercase
-		if self >= 0x41 && self <= 0x5A { // >= 'A' <= 'Z'
-			newCharacter += 0x61 - 0x41 // 'a' - 'A'
+		switch self {
+		case 0x3F:
+			return 0x7F
+		case 0x40...0x5F:
+			return self - 0x40
+		case 0x61...0x7A:
+			return self - 0x60
+		default:
+			return self
 		}
-		// Convert to the matching control character
-		if self >= 0x61 && self <= 0x7A { // >= 'a' <= 'z'
-			newCharacter -= 0x61 - 1 // 'a' - 1
-		}
-		return newCharacter
 	}
 }

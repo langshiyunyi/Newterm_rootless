@@ -12,10 +12,14 @@ import SwiftUIX
 class KeyboardToolbarInputView: UIInputView {
 
 	private var hostingView: UIHostingView<AnyView>!
+    private var delegate: KeyboardToolbarViewDelegate!
 
 	init(delegate: KeyboardToolbarViewDelegate?, toolbars: [Toolbar], state: KeyboardToolbarViewState) {
 		super.init(frame: .zero, inputViewStyle: .keyboard)
+        self.delegate = delegate
 
+        setContentHuggingPriority(.fittingSizeLevel, for: .vertical)
+        setContentCompressionResistancePriority(.fittingSizeLevel, for: .vertical)
 		translatesAutoresizingMaskIntoConstraints = false
 		allowsSelfSizing = true
 
@@ -23,9 +27,13 @@ class KeyboardToolbarInputView: UIInputView {
 			KeyboardToolbarView(delegate: delegate, toolbars: toolbars)
 				.environmentObject(state)
 		))
+//        hostingView = UIHostingView(rootView: AnyView(
+//            KeyboardToolbarViewTest()
+//        ))
 		hostingView.translatesAutoresizingMaskIntoConstraints = false
 		hostingView.shouldResizeToFitContent = true
-		hostingView.setContentHuggingPriority(.fittingSizeLevel, for: .vertical)
+        hostingView.setContentHuggingPriority(.fittingSizeLevel, for: .vertical)
+        hostingView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .vertical)
 		addSubview(hostingView)
 
 		NSLayoutConstraint.activate([
@@ -35,6 +43,11 @@ class KeyboardToolbarInputView: UIInputView {
 			hostingView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
 		])
 	}
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        delegate?.keyboardToolbarDidChangeHeight(height: self.frame.size.height)
+    }
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")

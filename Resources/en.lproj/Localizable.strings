@@ -55,10 +55,6 @@ You may need to review startup scripts or reinstall core packages to fix this is
 	<key>CLEAR_TERMINAL</key>
 	<string>Clear Terminal</string>
 
-	<!-- VoiceOver label for the button that reveals the password manager. -->
-	<key>PASSWORD_MANAGER</key>
-	<string>Password Manager</string>
-
 	<!-- Label for a keyboard shortcut that selects the previous tab. -->
 	<key>SHOW_PREVIOUS_TAB</key>
 	<string>Show Previous Tab</string>
@@ -78,5 +74,122 @@ You may need to review startup scripts or reinstall core packages to fix this is
 	<!-- Settings option to use the operating system’s locale. %@ is the user’s operating system language. -->
 	<key>LOCALE_SYSTEM</key>
 	<string>System Language: %@</string>
+
+	<key>Terminal</key>
+	<string>Terminal</string>
+	<key>Font</key>
+	<string>Font</string>
+	<key>Theme</key>
+	<string>Theme</string>
+	<key>Keyboard</key>
+	<string>Keyboard</string>
+	<key>Touch and hold the Space bar, then drag around the keyboard to move the cursor.</key>
+	<string>Touch and hold the Space bar, then drag around the keyboard to move the cursor.</string>
+	<key>Shortcut Keys</key>
+	<string>Shortcut Keys</string>
+	<key>Arrow Keys</key>
+	<string>Arrow Keys</string>
+	<key>Trackpad Sensitivity</key>
+	<string>Trackpad Sensitivity</string>
+	<key>Bell</key>
+	<string>Bell</string>
+	<key>Make beep sound</key>
+	<string>Make beep sound</string>
+	<key>Make haptic vibration</key>
+	<string>Make haptic vibration</string>
+	<key>Show heads-up display</key>
+	<string>Show heads-up display</string>
+	<key>Advanced</key>
+	<string>Advanced</string>
+	<key>About</key>
+	<string>About</string>
+	<key>Toolbar Keys</key>
+	<string>Toolbar Keys</string>
+	<key>Drag to reorder. Swipe left to remove. Arrow keys remain fixed on the right side of the toolbar.</key>
+	<string>Drag to reorder. Swipe left to remove. Arrow keys remain fixed on the right side of the toolbar.</string>
+	<key>Available Keys</key>
+	<string>Available Keys</string>
+	<key>Fn opens the F1–F12 row. Shift and Control stay active for the next key press.</key>
+	<string>Fn opens the F1–F12 row. Shift and Control stay active for the next key press.</string>
+	<key>Reset to Defaults</key>
+	<string>Reset to Defaults</string>
+	<key>Font Size</key>
+	<string>Font Size</string>
+	<key>FONT_SIZE</key>
+	<string>Font Size: %ld</string>
+	<key>Built in Themes</key>
+	<string>Built in Themes</string>
+	<key>System Language</key>
+	<string>System Language</string>
+	<key>Performance</key>
+	<string>Performance</string>
+	<key>Locale</key>
+	<string>Locale</string>
+	<key>Language</key>
+	<string>Language</string>
+	<key>NewTerm will ask terminal programs to use this locale. Not all programs support this. This will not apply to currently open tabs, and may be overridden by shell startup scripts.</key>
+	<string>NewTerm will ask terminal programs to use this locale. Not all programs support this. This will not apply to currently open tabs, and may be overridden by shell startup scripts.</string>
+	<key>On AC Power</key>
+	<string>On AC Power</string>
+	<key>Refresh Rate</key>
+	<string>Refresh Rate</string>
+	<key>The Performance setting is recommended.</key>
+	<string>The Performance setting is recommended.</string>
+	<key>On Battery</key>
+	<string>On Battery</string>
+	<key>BATTERY_REFRESH_RATE_FOOTER</key>
+	<string>A lower refresh rate improves %@ battery life, but may cause the terminal display to feel sluggish.
+The Performance setting is recommended.</string>
+	<key>Preserve battery life by switching to Power Saver when Low Power Mode is enabled.</key>
+	<string>Preserve battery life by switching to Power Saver when Low Power Mode is enabled.</string>
+	<key>Reduce Performance in Low Power Mode</key>
+	<string>Reduce Performance in Low Power Mode</string>
+	<key>Power Saver</key>
+	<string>Power Saver</string>
+	<key>Balanced</key>
+	<string>Balanced</string>
+	<key>Speed Demon</key>
+	<string>Speed Demon</string>
+	<key>Not installed. Tap to download.</key>
+	<string>Not installed. Tap to download.</string>
+	<key>License &amp; Acknowledgements</key>
+	<string>License &amp; Acknowledgements</string>
+	<key>VERSION_FORMAT</key>
+	<string>NewTerm %@</string>
+	<key>This is a beta — thanks for trying it out! If you find any issues, please let us know.</key>
+	<string>This is a beta — thanks for trying it out! If you find any issues, please let us know.</string>
+	<key>Email Support</key>
+	<string>Email Support</string>
+	<key>Support NewTerm Development</key>
+	<string>Support NewTerm Development</string>
+	<key>Share NewTerm</key>
+	<string>Share NewTerm</string>
+	<key>© HASHBANG Productions</key>
+	<string>© HASHBANG Productions</string>
+	<key>Dedicated to Dennis Bednarz (2000 – 2019), a friend and visionary of the iOS community taken from us too soon.</key>
+	<string>Dedicated to Dennis Bednarz (2000 – 2019), a friend and visionary of the iOS community taken from us too soon.</string>
+	<key>NewTerm is made available for free thanks to generous support from these fans:</key>
+	<string>NewTerm is made available for free thanks to generous support from these fans:</string>
+	<key>Check out NewTerm, a modern, super fast terminal app for iOS and macOS! 🧑‍💻</key>
+	<string>Check out NewTerm, a modern, super fast terminal app for iOS and macOS! 🧑‍💻</string>
+
+	<key>ARROW_STYLE_BUTTERFLY</key>
+	<string>Butterfly</string>
+	<key>ARROW_STYLE_SCISSOR</key>
+	<string>Scissor</string>
+	<key>ARROW_STYLE_CLASSIC</key>
+	<string>Classic</string>
+	<key>ARROW_STYLE_VIM</key>
+	<string>Vim</string>
+	<key>ARROW_STYLE_VIM_INVERTED</key>
+	<string>Vim Inverted</string>
+	<key>SENSITIVITY_OFF</key>
+	<string>Off</string>
+	<key>SENSITIVITY_LOW</key>
+	<string>Low</string>
+	<key>SENSITIVITY_MEDIUM</key>
+	<string>Medium</string>
+	<key>SENSITIVITY_HIGH</key>
+	<string>High</string>
 </dict>
 </plist>

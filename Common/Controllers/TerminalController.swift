@@ -12,7 +12,9 @@ import SwiftTerm
 import os.log
 
 public protocol TerminalControllerDelegate: AnyObject {
-	func refresh(lines: inout [AnyView])
+    func refresh(lines: inout [AnyView])
+    func refresh(lines: inout [BufferLine], cursor: (Int,Int))
+    func scroll(animated: Bool)
 	func activateBell()
 	func titleDidChange(_ title: String?, isDirty: Bool, hasBell: Bool)
 	func currentFileDidChange(_ url: URL?, inWorkingDirectory workingDirectoryURL: URL?)
@@ -37,10 +39,10 @@ public class TerminalController {
 		set { stringSupplier.fontMetrics = newValue }
 	}
 
-	internal var terminal: Terminal?
+    internal var terminal: Terminal?
 	private var subProcess: SubProcess?
 	private var subProcessFailureError: Error?
-	private let stringSupplier = StringSupplier()
+	public let stringSupplier = StringSupplier()
 	private var lines = [AnyView]()
 
 	private var processLaunchDate: Date?
@@ -56,8 +58,9 @@ public class TerminalController {
 		didSet { updateTitle() }
 	}
 	private var readBuffer = [UTF8Char]()
+    private var bufferLock = NSLock()
 
-	internal var terminalQueue = DispatchQueue(label: "ws.hbang.Terminal.terminal-queue")
+    internal var terminalQueue = DispatchQueue(label: "ws.hbang.Terminal.terminal-queue")
 
 	public var screenSize: ScreenSize? {
 		didSet { updateScreenSize() }
@@ -82,7 +85,7 @@ public class TerminalController {
 
 	public init() {
 		let options = TerminalOptions(termName: "xterm-256color",
-																	scrollback: 10_000)
+																	scrollback: 10000)
 		terminal = Terminal(delegate: self, options: options)
 
 		stringSupplier.terminal = terminal
@@ -109,7 +112,9 @@ public class TerminalController {
 		stringSupplier.fontMetrics = preferences.fontMetrics
 
 		powerStateChanged()
-		terminal?.refresh(startRow: 0, endRow: terminal?.rows ?? 0)
+        terminalQueue.async {
+            self.terminal?.refresh(startRow: 0, endRow: self.terminal?.rows ?? 0)
+        }
 	}
 
 	@objc private func powerStateChanged() {
@@ -197,9 +202,17 @@ public class TerminalController {
 	// MARK: - Terminal
 
 	public func readInputStream(_ data: [UTF8Char]) {
-		terminalQueue.async {
-			self.readBuffer += data
-		}
+        var buflen = 0
+        bufferLock.lock()
+        self.readBuffer += data
+        buflen = self.readBuffer.count
+        bufferLock.unlock()
+
+        if buflen > 100 {
+            terminalQueue.sync {
+                //waiting for terminal to process buffer
+            }
+        }
 	}
 
 	private func readInputStream(_ data: Data) {
@@ -216,10 +229,18 @@ public class TerminalController {
 
 	@objc private func updateTimerFired() {
 		terminalQueue.async {
+            var buffer = [UTF8Char]()
+
+            self.bufferLock.lock()
 			if !self.readBuffer.isEmpty {
-				self.terminal?.feed(byteArray: self.readBuffer)
-				self.readBuffer.removeAll()
+                buffer = self.readBuffer
+                self.readBuffer.removeAll()
 			}
+            self.bufferLock.unlock()
+
+            if !buffer.isEmpty {
+                self.terminal?.feed(byteArray: buffer)
+            }
 
 			guard let terminal = self.terminal else {
 				return
@@ -237,34 +258,29 @@ public class TerminalController {
 			terminal.clearUpdateRange()
 
 			let scrollInvariantRows = scrollbackRows + terminal.rows
-
-			// Remove lines that no longer exist
-			if self.lines.count > scrollInvariantRows {
-				self.lines.removeSubrange((scrollInvariantRows - 1)...)
-			}
-
-			// Add new lines that have been introduced
-			while self.lines.count <= max(updateRange.endY, scrollInvariantRows) {
-				self.lines.append(AnyView(EmptyView()))
-			}
-
-			// Update lines that changed
-			var linesToUpdate = updateRange == (0, 0) ? Set() : Set(updateRange.startY...updateRange.endY)
-			if cursorLocation != self.lastCursorLocation {
-				linesToUpdate.insert(cursorLocation.y)
-				if self.lastCursorLocation.y != -1 && self.lastCursorLocation.y < scrollInvariantRows {
-					linesToUpdate.insert(self.lastCursorLocation.y)
-				}
-			}
-
-			for i in linesToUpdate {
-				self.lines[i] = self.stringSupplier.attributedString(forScrollInvariantRow: i)
-			}
-
 			self.lastCursorLocation = cursorLocation
 
+            var count = scrollInvariantRows
+            if scrollbackRows==0 && !terminal.buffers.isAlternateBuffer {
+                count = terminal.buffer.y+1
+            }
+
+//            self.lines = [AnyView]()
+//            for i in 0..<count {
+//                self.lines.append(self.stringSupplier.attributedString(forScrollInvariantRow: i))
+//            }
+
+            var alllines = [BufferLine]()
+            for i in 0..<count {
+                let line = terminal.buffer.lines[i]
+//                NSLog("NewTermLog: buffer line[\(i)](len=\(line.count)): \(line)")
+                alllines.append(line)
+            }
+
+
 			DispatchQueue.main.async {
-				self.delegate?.refresh(lines: &self.lines)
+//                self.delegate?.refresh(lines: &self.lines)
+                self.delegate?.refresh(lines: &alllines, cursor: cursorLocation)
 
 				if !self.isVisible && !self.isDirty {
 					self.isDirty = true
@@ -274,7 +290,9 @@ public class TerminalController {
 	}
 
 	public func clearTerminal() {
-		terminal?.resetToInitialState()
+        terminalQueue.async {
+            self.terminal?.resetToInitialState()
+        }
 
 		// To trigger a redraw, update the screen size, then update it back.
 		if let screenSize = screenSize {
@@ -289,17 +307,27 @@ public class TerminalController {
 	}
 
 	private func updateScreenSize() {
-		if let screenSize = screenSize,
-			 let terminal = terminal,
-			 screenSize.cols != terminal.cols || screenSize.rows != terminal.rows {
-			subProcess?.screenSize = screenSize
-			terminal.resize(cols: Int(screenSize.cols),
-											rows: Int(screenSize.rows))
+//        Thread.callStackSymbols.forEach{NSLog("NewTermLog: callstack=\($0)")}
 
-			if let error = subProcessFailureError {
-				let message = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-				readInputStream(ColorBars.render(screenSize: screenSize, message: message))
-			}
+        terminalQueue.async {
+            if let screenSize = self.screenSize, let terminal = self.terminal,
+               screenSize.cols != terminal.cols || screenSize.rows != terminal.rows {
+
+                self.subProcess?.screenSize = screenSize
+
+                terminal.resize(cols: Int(screenSize.cols), rows: Int(screenSize.rows))
+
+                self.subProcess?.activeProcess()
+
+                DispatchQueue.main.async {
+                    //                    self.delegate?.scroll()
+                }
+
+                if let error = self.subProcessFailureError {
+                    let message = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+                    self.readInputStream(ColorBars.render(screenSize: screenSize, message: message))
+                }
+            }
 		}
 	}
 
@@ -419,6 +447,12 @@ extension TerminalController: TerminalInputProtocol {
 		subProcess!.write(data: data)
 	}
 
+    public func getAllText() -> String? {
+        guard let terminal = self.terminal else { return nil }
+        let start = Position(col: 0, row: 0)
+        let end = Position(col: terminal.cols, row: terminal.buffer.lines.count)
+        return terminal.getText(start: start, end: end)
+    }
 }
 
 extension TerminalController: SubProcessDelegate {

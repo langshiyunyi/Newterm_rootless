@@ -60,7 +60,7 @@ struct SettingsPerformanceView: View {
 											 footer: UIDevice.current.isPortable
 												? AnyView(EmptyView())
 												: AnyView(Text("The Performance setting is recommended."))) {
-				PreferencesPicker(selection: preferences.$refreshRateOnAC,
+				PreferencesPicker(selection: $preferences.refreshRateOnAC,
 													label: EmptyView()) {
 					list
 				}
@@ -68,10 +68,10 @@ struct SettingsPerformanceView: View {
 
 			if UIDevice.current.isPortable {
 				PreferencesGroup(header: Label(title: { Text("On Battery") },
-																			 icon: { Image(systemName: batteryImageName).imageScale(.medium) }),
-												 footer: Text("A lower refresh rate improves \(UIDevice.current.deviceModel) battery life, but may cause the terminal display to feel sluggish.\nThe Performance setting is recommended.")
-													.fixedSize(horizontal: false, vertical: true)) {
-						PreferencesPicker(selection: preferences.$refreshRateOnBattery,
+															 icon: { Image(systemName: batteryImageName).imageScale(.medium) }),
+										 footer: Text(String(format: .localize("BATTERY_REFRESH_RATE_FOOTER"), UIDevice.current.deviceModel))
+											.fixedSize(horizontal: false, vertical: true)) {
+						PreferencesPicker(selection: $preferences.refreshRateOnBattery,
 															label: EmptyView()) {
 							list
 						}
@@ -80,7 +80,7 @@ struct SettingsPerformanceView: View {
 				if #available(macOS 12, *) {
 					PreferencesGroup(footer: Text("Preserve battery life by switching to Power Saver when Low Power Mode is enabled.")) {
 						Toggle("Reduce Performance in Low Power Mode",
-									 isOn: preferences.$reduceRefreshRateInLPM)
+									 isOn: $preferences.reduceRefreshRateInLPM)
 					}
 				}
 			}
@@ -105,4 +105,3 @@ struct SettingsPerformanceView_Previews: PreviewProvider {
 		.previewDisplayName("120 Hz device")
 	}
 }
-

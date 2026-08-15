@@ -4,7 +4,7 @@ on:
   push:
     paths-ignore:
       - '.gitignore'
-      - '**/.md'
+      - '**/*.md'
       - 'assets/**'
   pull_request:
     paths-ignore:
@@ -15,11 +15,11 @@ on:
 
 jobs:
   build:
-    name: Build
-    runs-on: macos-12
+    name: Build (rootless)
+    runs-on: macos-15
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Procursus
       uses: beerpiss/procursus-action@v2
       with:
@@ -32,9 +32,10 @@ jobs:
       id: package_build
       run: |
         gmake package THEOS=~/theos
-        echo "package=$(cat .theos/last_package)" >> $GITHUB_OUTPUT
+        echo "package=$(cat .theos/last_package)" >> "$GITHUB_OUTPUT"
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: NewTerm3
+        name: NewTerm3-rootless
         path: '${{ steps.package_build.outputs.package }}'
+        if-no-files-found: error
