@@ -104,31 +104,34 @@ class SubProcess {
 		"LC_TERMINAL=NewTerm"
 	]
 
-	private static var userPasswd: passwd? {
+	private static var userInfo: (homeDirectory: String?, shell: String?) {
 		let length = sysconf(_SC_GETPW_R_SIZE_MAX)
-		let buffer = malloc(length)
-		defer { buffer?.deallocate() }
+		guard length > 0 else {
+			return (nil, nil)
+		}
+
+		let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: Int(length))
+		defer { buffer.deallocate() }
 
 		var pwd = passwd()
-		var result: UnsafeMutablePointer<passwd>? = UnsafeMutablePointer<passwd>.allocate(capacity: 1)
-		guard ie_getpwuid_r(getuid(), &pwd, buffer, length, &result) == 0 else {
-			return nil
+		var result: UnsafeMutablePointer<passwd>?
+		guard ie_getpwuid_r(getuid(), &pwd, buffer, Int(length), &result) == 0,
+			  result != nil else {
+			return (nil, nil)
 		}
-		return pwd
+
+		// passwd stores pointers into buffer, so copy the strings before releasing it.
+		let homeDirectory = pwd.pw_dir.map { String(cString: $0) }
+		let shell = pwd.pw_shell.map { String(cString: $0) }
+		return (homeDirectory, shell)
 	}
 
 	private static var shell: String {
-		if let result = userPasswd?.pw_shell {
-			return String(cString: result)
-		}
-		return "/bin/bash"
+		userInfo.shell ?? "/bin/bash"
 	}
 
 	private static var homeDirectory: String {
-		if let result = userPasswd?.pw_dir {
-			return String(cString: result)
-		}
-		return NSHomeDirectory()
+		userInfo.homeDirectory ?? NSHomeDirectory()
 	}
 
 	weak var delegate: SubProcessDelegate?
